@@ -1,0 +1,34 @@
+{
+  "tests": [
+    {
+      "name": "testPromptMessage",
+      "setup": "",
+      "run": "gradle testPromptMessage",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 5
+    },
+    {
+      "name": "testGivenFile",
+      "setup": "",
+      "run": "gradle testGivenFile",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 5
+    },
+    {
+      "name": "testBatchFile",
+      "setup": "",
+      "run": "gradle testBatchFile",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 5
+    }
+  ]
+}

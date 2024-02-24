@@ -1,0 +1,128 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
+plugins {
+    id 'java'
+    id 'eclipse'    // Apply the 'eclipse' plugin so we can generate Eclipse project files
+    id 'idea'       // Apply the 'idea' plugin so we can generate IntelliJ project files
+    id 'checkstyle' // Apply the 'checkstyle' plugin so we can check our code style
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+
+// This project uses a few 3rd party libraries. Rather then downloading
+// and installing them manually, which can be highly error-prone, we
+// have Gradle do it for us. In the "repositories" section, we specify
+// where we want to search for these 3rd party packages.
+repositories {
+    // Maven central is a website containing a large collection of
+    // 3rd party libraries. It was originally meant to be used with the
+    // Maven build tool, but it's so comprehensive other build tools decided
+    // to just use this one instead of building a similar website.
+    //
+    // mavenLocal() refers a folder in your computer that contains any
+    // libraries you may have already pre-downloaded; mavenCentral refers to
+    // the actual website.
+    mavenLocal()
+    mavenCentral()
+}
+
+// Here, we list all the different libraries we plan on using.
+// Gradle will automatically download them from the repositories listed above.
+dependencies {
+//    assert project.hasProperty("checkstyleVersion")
+//
+//    checkstyle "com.puppycrawl.tools:checkstyle:${checkstyleVersion}"
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    testImplementation 'org.junit-pioneer:junit-pioneer:2.0.0'
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.8.1')
+}
+
+tasks.withType(Test) {
+    testLogging {
+        events TestLogEvent.FAILED,
+                TestLogEvent.SKIPPED,
+                TestLogEvent.STANDARD_ERROR,
+                TestLogEvent.STANDARD_OUT
+        exceptionFormat TestExceptionFormat.FULL
+        showCauses true
+        showExceptions true
+        showStackTraces true
+        showStandardStreams true
+    }
+}
+
+sourceSets.main.java.srcDirs = ['src']
+sourceSets.test.java.srcDirs = ['tst']
+
+task testPromptMessage(type: Test) {
+    useJUnitPlatform {
+        filter {
+            includeTestsMatching "TestPersonality.testPromptMessage"
+        }
+    }
+
+    dependsOn test
+    mustRunAfter test
+}
+
+task testGivenFile(type: Test) {
+    useJUnitPlatform {
+        filter {
+            includeTestsMatching "TestPersonality.testGivenFile"
+        }
+    }
+
+    dependsOn test
+    mustRunAfter test
+}
+
+task testBatchFile(type: Test) {
+    useJUnitPlatform {
+        filter {
+            includeTestsMatching "TestPersonality.testBatchFile"
+        }
+    }
+
+    dependsOn test
+    mustRunAfter test
+}
+
+task testFileComparisonFinal(type: Test) {
+    useJUnitPlatform {
+        includeTags 'FileFunctionalityFinal'
+    }
+
+    group = 'verification'
+    dependsOn tasks.findByName('testPromptMessage')
+    dependsOn tasks.findByName('testGivenFile')
+    dependsOn tasks.findByName('testBatchFile')
+    mustRunAfter tasks.findByName('testPromptMessage')
+    mustRunAfter tasks.findByName('testGivenFile')
+    mustRunAfter tasks.findByName('testBatchFile')
+}
+
+test {
+    useJUnitPlatform {
+        excludeTags 'FileFunctionality | FileFunctionalityFinal'
+    }
+}
+
+checkstyle {
+    toolVersion '10.12.3'
+    configFile file("${project.rootDir}/config/checkstyle/checkstyle.xml")
+    ignoreFailures = true;
+}
+
+checkstyleMain {
+    enabled = true
+    source ='src'   // changed from default of 'src/main'
+    ignoreFailures = true   // Set ignoreFailures to true to ignore checkstyle errors and continue build
+}
+
+checkstyleTest {
+    enabled = false
+    source ='tst'
+    ignoreFailures = true;
+}

@@ -1,0 +1,22 @@
+##############################
+## IntelliJ
+##############################
+.idea
+*.iws
+*.iml
+*.ipr
+/out/
+
+##############################
+## Gradle
+##############################
+bin/
+build/
+.gradle
+.gradletasknamecache
+gradle-app.setting
+!gradle-wrapper.jar
+
+!HW4ExtraCreditOrdered.jar
+!actual_batch_output.txt
+!actual_given_output.txt
