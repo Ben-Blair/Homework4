@@ -10,29 +10,34 @@ import java.io.*;
 import java.util.*;
 
 public class Personality {
+    // Constants
     public static final int NUM_DIMENSIONS = 4;
     public static final String[][] DIMENSION_OPTIONS = {{"E", "I"}, {"S", "N"}, {"T", "F"}, {"J", "P"}};
 
+    // Main method
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        introduceProgram();
+        introduceProgram(); // Call introduction message
         try {
             System.out.print("input file name? ");
-            Scanner inputFileScanner = new Scanner(new File(scanner.next()));
+            String inputFileName = scanner.next();
+            Scanner inputFileScanner = new Scanner(new File(inputFileName)); // Read input file
 
             System.out.print("output file name? ");
-            PrintStream outputFile = new PrintStream(new File(scanner.next()));
+            String outputFileName = scanner.next();
+            PrintStream outputFile = new PrintStream(new File(outputFileName)); // Read output file
 
-            processInputFile(inputFileScanner, outputFile);
+            processInputFile(inputFileScanner, outputFile); // Process input file
 
-            outputFile.close();
-            inputFileScanner.close();
+            outputFile.close(); // Close output file
+            inputFileScanner.close(); // Close input file
         } catch (FileNotFoundException e) {
-            System.out.println("File not found.");
+            System.out.println("File not found: " + e.getMessage()); // Handle file not found exception
         } finally {
-            scanner.close();
+            scanner.close(); // Close scanner
         }
     }
+
 
     // Introduction message
     public static void introduceProgram() {
